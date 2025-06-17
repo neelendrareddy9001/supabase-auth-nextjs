@@ -39,3 +39,25 @@ export async function signUp(formData: FormData) {
     revalidatePath("/", "layout")
     return { status: "success", user: data.user }
 }
+
+export async function signIn(formData: FormData) {
+    const supabase = await createClient();
+
+    const credentials = {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+    }
+
+    const { error, data } = await supabase.auth.signInWithPassword(credentials);
+
+    if (error) {
+        return {
+            status: error?.message,
+            user: null
+        }
+    }
+
+
+    revalidatePath("/", "layout")
+    return { satus: "success", user: data.user }
+}
